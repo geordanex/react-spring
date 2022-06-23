@@ -1,25 +1,23 @@
-import logo from './logo.svg';
+import {Button, Radio} from "antd";
+
+import {getAllStudents} from "./client";
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    getAllStudents()
+        .then(res => res.json())
+        .then(console.log)
+    return (
+        <div className="App">
+            <Button type="primary">Hello</Button>
+            <br/>
+            <Radio.Group value="large">
+                <Radio.Button value="large">Large</Radio.Button>
+                <Radio.Button value="default">Default</Radio.Button>
+                <Radio.Button value="small">Small</Radio.Button>
+            </Radio.Group>
+        </div>
+    );
 }
 
 export default App;
