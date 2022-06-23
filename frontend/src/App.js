@@ -1,12 +1,12 @@
 import {useState, useEffect} from 'react';
 import {getAllStudents} from "./client";
 import {
-    Breadcrumb,
+    Breadcrumb, Empty,
     Layout,
-    Menu,
+    Menu, Spin,
     Table
 } from 'antd';
-import {FileOutlined, PieChartOutlined, UserOutlined} from '@ant-design/icons';
+import {FileOutlined, LoadingOutlined, PieChartOutlined, UserOutlined} from '@ant-design/icons';
 
 import './App.css';
 
@@ -56,9 +56,12 @@ const items = [
     getItem('Files', '9', <FileOutlined/>),
 ];
 
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+
 function App() {
     const [collapsed, setCollapsed] = useState(false);
     const [students, setStudents] = useState([]);
+    const [fetching, setFetching] = useState(true);
 
     const fetchStudents = () =>
         getAllStudents()
@@ -66,19 +69,30 @@ function App() {
             .then(data => {
                 console.log(data);
                 setStudents(data);
+                setFetching(false);
             })
+
     useEffect(() => {
         console.log("component is mounted");
         fetchStudents();
     }, []);
 
     const renderStudents = () => {
+        if (fetching) {
+            return <Spin indicator={antIcon} />
+        }
         if (students.length <= 0) {
-            return "no data available"
+            return <Empty />;
         }
         return <Table
             dataSource={students}
-            columns={columns}/>
+            columns={columns}
+            bordered
+            title={() => "Students"}
+            pagination={{pageSize: 50}}
+            scroll={{y: 240}}
+            rowKey={(student) => student.id}
+        />
     }
 
     return (<Layout
@@ -119,7 +133,7 @@ function App() {
                     textAlign: 'center',
                 }}
             >
-                Ant Design ©2018 Created by Ant UED
+                By Geordan Sanchez
             </Footer>
         </Layout>
     </Layout>);
